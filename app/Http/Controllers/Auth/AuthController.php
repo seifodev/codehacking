@@ -63,10 +63,21 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+//        $user = User::create([
+//            'name' => $data['name'],
+//            'email' => $data['email'],
+//            'password' => bcrypt($data['password']),
+//        ]);
+//        // Add default role (subscriber) to the new created user
+//        $role = \App\Role::whereName('subscriber')->first()->users()->save($user);
+//        return $user;
+
     }
 }

@@ -1,2 +1,17 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+.user_photo_thumb
+{
+  display: block;
+  width: 85px;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #eee;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+}
 
+.table tr td
+{
+  vertical-align: middle !important;
+}

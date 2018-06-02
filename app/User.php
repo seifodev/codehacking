@@ -28,4 +28,35 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Role');
     }
+
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
+
+    /**
+     * check if user is active and an administrator
+     * @return bool
+     */
+
+    public function isAdmin()
+    {
+
+        return ($this->role->name == 'administrator' && $this->is_active == 1) ? true : false;
+
+    }
+
+    public function delete()
+    {
+        if($this->photo)
+        {
+            $this->photo->delete();
+        }
+        return parent::delete();
+    }
+
+//    public function getNameAttribute($value)
+//    {
+//        return 'Name: ' . $value;
+//    }
 }

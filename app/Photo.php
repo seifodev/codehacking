@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Photo extends Model
 {
-    private static $destinationPath = 'images';
+    public static $destinationPath = 'images';
     protected $fillable = ['path'];
 
     public function user()
@@ -20,10 +20,10 @@ class Photo extends Model
 
     /**
      * Upload Photo if exists and store photo data into database
-     * @param UsersRequest $request
+     * @param object $request
      * @return Photo|bool
      */
-    public static function upload(UsersRequest $request)
+    public static function upload($request)
     {
         if($request->hasFile('photo') && $request->file('photo')->isValid())
         {
@@ -37,6 +37,11 @@ class Photo extends Model
         return false;
     }
 
+    /**
+     * delete photo file if exists before deleting from database
+     * @return bool|null
+     * @throws \Exception
+     */
     public function delete()
     {
         $photoFilePath = public_path() . DIRECTORY_SEPARATOR . static::$destinationPath . DIRECTORY_SEPARATOR . $this->path;
@@ -46,5 +51,15 @@ class Photo extends Model
         }
         return parent::delete();
 
+    }
+
+
+
+    /**
+     *
+     */
+    public function photoPath()
+    {
+        return '/' . static::$destinationPath . '/' . $this->path;
     }
 }

@@ -24,6 +24,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /*-------------------------------*\
+        Relationships
+    \*-------------------------------*/
+
     public function role()
     {
         return $this->belongsTo('App\Role');
@@ -34,6 +38,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Photo');
     }
 
+    public function posts()
+    {
+        return $this->hasMany('App\Post');
+    }
+
     /**
      * check if user is active and an administrator
      * @return bool
@@ -41,11 +50,14 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-
         return ($this->role->name == 'administrator' && $this->is_active == 1) ? true : false;
-
     }
 
+    /**
+     * Delete user photo if exists then delete the user
+     * @return bool|null
+     * @throws \Exception
+     */
     public function delete()
     {
         if($this->photo)
@@ -55,8 +67,4 @@ class User extends Authenticatable
         return parent::delete();
     }
 
-//    public function getNameAttribute($value)
-//    {
-//        return 'Name: ' . $value;
-//    }
 }

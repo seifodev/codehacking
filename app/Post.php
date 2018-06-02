@@ -14,4 +14,25 @@ class Post extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function photo()
+    {
+        return $this->morphOne('App\Photo', 'imageable');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Category');
+    }
+
+    public function delete()
+    {
+        // if the post has a photo, delete it before deleting the post
+        if($this->photo)
+        {
+            $this->photo->delete();
+        }
+         // delete the post
+        return parent::delete();
+    }
 }

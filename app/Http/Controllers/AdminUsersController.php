@@ -46,20 +46,19 @@ class AdminUsersController extends Controller
     {
         $inputs = $request->all();
 
-        // CHeck if there is a photo to be uploaded
-        $photoUpload = Photo::upload($request);
-        if($photoUpload)
-        {
-            $inputs['photo_id'] = $photoUpload->id;
-        }
-
-
         $inputs['password'] = bcrypt($inputs['password']);
         $user = User::create($inputs);
+
+        // Check if there is a photo to be uploaded
+        if($photoUpload = Photo::upload($request))
+        {
+            // add the photo to the user
+            $user->photo()->save($photoUpload);
+        }
+
         session()->flash('message', 'User was added successfully');
         return redirect()->route('admin.users.index');
 
-//        var_dump($request->file('photo')->getClientOriginalName());
 
     }
 
@@ -119,20 +118,22 @@ class AdminUsersController extends Controller
             $inputs['password'] = bcrypt($request->password);
         }
 
-        // CHeck if there is a photo to be uploaded
-        $photoUpload = Photo::upload($request);
-        if($photoUpload)
-        {
-            $inputs['photo_id'] = $photoUpload->id;
 
+        $user->update($inputs);
+
+        // Check if there is a photo to be uploaded
+        if($photoUpload = Photo::upload($request))
+        {
             // If there is an old photo, delete it
             if($user->photo)
             {
                 $user->photo->delete();
             }
+
+            // add the new photo to the user
+            $user->photo()->save($photoUpload);
         }
 
-        $user->update($inputs);
         $request->session()->flash('message', 'User was updated successfully');
         return redirect()->back();
 

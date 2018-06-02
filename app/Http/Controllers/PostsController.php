@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PostsRequest;
+use App\Photo;
+use App\Category;
 
 class PostsController extends Controller
 {
@@ -28,7 +31,8 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::pluck('name', 'id')->all();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -37,13 +41,22 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostsRequest $request)
     {
         $inputs = $request->all();
 
-        $user = Auth::user();
 
-        $user->posts()->create($inputs);
+        $post = Auth::user()->posts()->create($inputs);
+
+        // check if there is a photo to be uploaded
+        if($photoUpload = Photo::upload($request))
+        {
+            // add the photo to the created post
+            $post->photo()->save($photoUpload);
+
+        }
+
+        $request->session()->flash('message', 'post has been added successfully');
         return redirect()->route('admin.posts.index');
 
 
@@ -57,7 +70,10 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::findOrFail($id);
+
+        return view('admin.posts.show', compact('post'));
+
     }
 
     /**
@@ -68,7 +84,10 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $categories = Category::pluck('name', 'id')->all();
+
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -78,9 +97,29 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostsRequest $request, $id)
     {
-        //
+        $inputs = $request->all();
+
+        $post = Post::findOrFail($id);
+        $post->update($inputs);
+
+        // check if there is a photo to be uploaded
+        if($photoUpload = Photo::upload($request))
+        {
+            // delete the old photo if existed
+            if($post->photo)
+            {
+                $post->photo->delete();
+            }
+            // add the new uploaded photo to the updated users
+            $post->photo()->save($photoUpload);
+        }
+
+        $request->session()->flash('message', 'Post has been updated successfully');
+        return redirect()->back();
+
+
     }
 
     /**
@@ -91,6 +130,10 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        session()->flash('message', 'Post has been deleted successfully');
+        return redirect()->route('admin.posts.index');
+
     }
 }

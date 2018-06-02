@@ -12,9 +12,9 @@ class Photo extends Model
     public static $destinationPath = 'images';
     protected $fillable = ['path'];
 
-    public function user()
+    public function imageable()
     {
-        return $this->hasOne('App\User');
+        return $this->morphTo();
     }
 
 
@@ -27,7 +27,7 @@ class Photo extends Model
     {
         if($request->hasFile('photo') && $request->file('photo')->isValid())
         {
-            $photoName = date('Y-m-d') . '_' . $request->file('photo')->getClientOriginalName();
+            $photoName = date('Y_m_d_H_i_s_') . '_' . $request->file('photo')->getClientOriginalName();
             $request->file('photo')->move(static::$destinationPath, $photoName);
 
             return static::create(['path' => $photoName]);
@@ -52,8 +52,6 @@ class Photo extends Model
         return parent::delete();
 
     }
-
-
 
     /**
      *

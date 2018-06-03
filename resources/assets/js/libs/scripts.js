@@ -71,7 +71,9 @@ $(document).ready(function(){
 
 
 
-
+    $('.category-create-btn').click(function () {
+        $('.category-create').slideToggle('slow');
+    });
 
 
 });

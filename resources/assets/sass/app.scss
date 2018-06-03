@@ -11,7 +11,29 @@
   border-radius: 8px;
 }
 
-.table tr td
+.table
 {
-  vertical-align: middle !important;
+  tr
+  {
+    td
+    {
+      vertical-align: middle !important;
+    }
+  }
+
+}
+
+.category-create
+{
+  background-color: #f8f8f8;
+  padding: 30px;
+  margin-bottom: 30px;
+  display: none;
+}
+
+.category-create-btn
+{
+
+  margin-bottom: 30px !important;
+  display: inline-block;
 }

@@ -1,1 +1,22 @@
-.user_photo_thumb{display:block;width:85px;background-color:#fff;padding:5px;border:1px solid #eee;border-radius:8px}.table tr td{vertical-align:middle!important}
+.user_photo_thumb {
+  display: block;
+  width: 85px;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #eee;
+  border-radius: 8px; }
+
+.table tr td {
+  vertical-align: middle !important; }
+
+.category-create {
+  background-color: #f8f8f8;
+  padding: 30px;
+  margin-bottom: 30px;
+  display: none; }
+
+.category-create-btn {
+  margin-bottom: 30px !important;
+  display: inline-block; }
+
+/*# sourceMappingURL=app.css.map */

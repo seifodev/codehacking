@@ -27,10 +27,11 @@ Route::group(['middleware' => 'admin'], function(){
 
         return view('admin.index');
 
-    });
+    })->name('admin.index');
 
     Route::resource('/admin/users', 'AdminUsersController');
     Route::resource('/admin/posts', 'PostsController');
+    Route::resource('admin/categories', 'AdminCategoriesController');
 
 });
 
